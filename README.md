@@ -1,0 +1,1 @@
+# Data not included on the github (file too heavy), to use it dowload the csv file locally and put it in a data folder to the root
