@@ -1,26 +1,14 @@
 # Dannyl MOUHEB – Modèle churn ClientCo
 
-Dossier indépendant : **aucun fichier d'Elouan ou de Paul n'est modifié**. Le CSV doit être dans
-`data/dataset_sales_2026.csv` (à la racine du dépôt).
+Le CSV doit être dans `data/dataset_sales_2026.csv` (à la racine du dépôt).
 
-**Le plus simple : les notebooks**, à ouvrir et exécuter dans l'ordre (« Run All ») :
-`dannyl_1_modele_mensuel.ipynb`, `dannyl_2_importance_variables.ipynb`,
-`dannyl_3_comparaison_mensuel_bimensuel.ipynb`, `dannyl_4_frequence_optimisee.ipynb`.
-Chacun explique la méthode, lance le script correspondant et affiche les tableaux et graphiques.
-Les paramètres (contacts par commercial, fréquences testées...) sont dans une cellule en haut.
-
-Les mêmes traitements se lancent aussi en ligne de commande, depuis la racine du dépôt :
-
-```bash
-pip install pandas numpy scikit-learn matplotlib xgboost
 python dannyl_modele_churn/dannyl_1_modele_mensuel.py               # le modèle et les chiffres de la présentation
 python dannyl_modele_churn/dannyl_2_importance_variables.py          # quelles features comptent (après le 1)
 python dannyl_modele_churn/dannyl_3_comparaison_mensuel_bimensuel.py # liste tous les mois ou toutes les 2 semaines ?
 python dannyl_modele_churn/dannyl_4_frequence_optimisee.py          # la fréquence comme hyperparamètre
-```
 
-Le premier lancement lit les 4 Go (10 à 30 min) et crée `cache/agregats.pkl` ; les suivants prennent
-quelques secondes à quelques minutes. `cache/` et `resultats/` ne sont jamais envoyés sur GitHub.
+
+Le premier lancement lit le dataset et crée `cache/agregats.pkl`
 
 | Fichier | Rôle |
 |---|---|
