@@ -3,8 +3,7 @@
 Prédit, chaque mois, les clients réguliers qui vont partir ou fortement réduire leurs achats, et produit
 la liste d'appels à transmettre aux commerciaux.
 
-Le CSV doit être dans `data/dataset_sales_2026.csv` (à la racine du dépôt). Le premier lancement lit le
-dataset et crée `cache/agregats.pkl` ; les suivants réutilisent ce cache.
+Le premier lancement lit le dataset et crée `cache/agregats.pkl` ; les suivants réutilisent ce cache.
 
 ## Lancer
 
