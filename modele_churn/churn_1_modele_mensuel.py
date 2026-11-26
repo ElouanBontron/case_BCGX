@@ -75,6 +75,7 @@ def main():
                          contacts_par_mois=a.contacts_par_mois, liste_mensuelle=K_mois_ds,
                          liste_trimestre=3 * K_mois_ds, liste_trimestre_test=K_trim,
                          part_clients_test=a.part_clients_test, contacts_an_groupe=int(a.reps * a.contacts_par_mois * 12),
+                         n_clients_test=int(len(test)),
                          part_clients_eligibles_contactes_trim=round(K_trim / len(test), 3))
 
     # --- descriptif du churn (photo complète)
@@ -167,7 +168,7 @@ def main():
     # --- liste d'appels type
     K_mois_test = K_trim // 3
     liste = test.nlargest(K_mois_test, "perte_attendue")[
-        ["client_id", "score", "ca_12m", "perte_attendue", "recence_j", "delai_median", "tendance_3m", "churn"]].copy()
+        ["client_id", "score", "ca_ref_trim", "ca_12m", "perte_attendue", "recence_j", "delai_median", "tendance_3m", "churn"]].copy()
     q = liste["perte_attendue"].rank(pct=True)
     liste["action"] = np.where(q > 0.9, "Visite", "Appel")   # 2 visites + 18 appels par commercial et par mois
     liste.rename(columns={"churn": "parti_en_realite"}).to_csv(os.path.join(a.sortie, "liste_appels_exemple.csv"), index=False, sep=";")
@@ -200,9 +201,16 @@ def graphique(R, dossier):
     fig, ax = plt.subplots(figsize=(7, 4))
     ax.plot([0] + list(g["pct_clients"]), [0] + list(g["pct_perte"]), marker="o", color="#197A56", label="CA à risque capté")
     ax.plot([0] + list(g["pct_clients"]), [0] + list(g["pct_churners"]), marker="o", color="#B9BDBA", label="Churners détectés")
-    ax.plot([0, 100], [0, 100], ls="--", color="#999", label="Au hasard")
+    ax.plot([0, 100], [0, 100], ls="--", color="#999", label="Au hasard (x % des clients → x % du CA)")
     ax.axvline(100 * R["capacite"]["part_clients_eligibles_contactes_trim"], color="#29BA74", ls=":", label="Capacité")
-    ax.set_xlabel("% des clients contactés (classés par CA à risque attendu)"); ax.set_ylabel("%")
+    ax.set_xlabel("% des clients réguliers contactés (classés par CA à risque attendu)"); ax.set_ylabel("% capté")
+    ax.set_xlim(0, 100); ax.set_ylim(0, 100)
+    # 2e abscisse : le même % exprimé en clients contactés par mois à l'échelle du groupe
+    cap = R["capacite"]
+    par_pct = cap["n_clients_test"] / cap["part_clients_test"] / cap["part_groupe"] / 3 / 100
+    haut = ax.secondary_xaxis("top", functions=(lambda x: x * par_pct, lambda n: n / par_pct))
+    haut.set_xlabel("Clients contactés par mois, à l'échelle du groupe", color="#29BA74")
+    haut.tick_params(axis="x", colors="#29BA74")
     ax.legend(); ax.grid(alpha=.3)
     fig.tight_layout(); fig.savefig(os.path.join(dossier, "courbe_gain.png"), dpi=150); plt.close(fig)
 
